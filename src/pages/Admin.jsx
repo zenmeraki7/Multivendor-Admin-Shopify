@@ -5,7 +5,6 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import BackupIcon from "@mui/icons-material/Backup";
 import { BASE_URL } from "../utils/baseUrl";
 import { Link } from "react-router-dom";
-
 import CustomInput from "../components/SharedComponents/CustomInput";
 import { logoutUser } from "../utils/authUtils";
 import CustomButton from "../components/SharedComponents/CustomButton";
@@ -42,24 +41,17 @@ const ProfileSection = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
   marginBottom: theme.spacing(3),
 }));
-import CustomInput from "../components/SharedComponents/CustomInput"; // Importing CustomInput
-import { logoutUser } from "../utils/authUtils";
-import CustomButton from "../components/SharedComponents/CustomButton";
-
 
 function Admin() {
   const [adminData, setAdminData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [profileImage, setProfileImage] = useState(null);
-
 
   useEffect(() => {
     const fetchAdminData = async () => {
       try {
         const token = localStorage.getItem("token");
-
         const response = await axios.get(
           `${BASE_URL}/api/admin/get-auth-admin`,
           {
@@ -68,31 +60,25 @@ function Admin() {
             },
           }
         );
-
         setAdminData((prevData) => {
           if (JSON.stringify(prevData) !== JSON.stringify(response.data.data)) {
             return response.data.data;
           }
           return prevData;
         });
-
         setLoading(false);
       } catch (err) {
         if (
           err.response &&
           (err.response.status === 404 || err.response.status === 401)
         ) {
-
           logoutUser();
-
-          logoutUser(); // Call logoutUser if 404 or 401 status code
-
         }
         setLoading(false);
       }
     };
     fetchAdminData();
-  }, []); // ✅ Ensures it runs only once on mount
+  }, []);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -105,11 +91,7 @@ function Admin() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-
       setProfileImage(URL.createObjectURL(file));
-
-      setProfileImage(URL.createObjectURL(file)); // Update profile image preview
-
     }
   };
 
@@ -134,7 +116,6 @@ function Admin() {
   }
 
   return (
-
     <Box
       sx={{
         padding: { xs: "20px", md: "40px" },
@@ -216,86 +197,6 @@ function Admin() {
               />
             </Box>
 
-    <div
-      style={{
-        padding: "30px",
-        backgroundColor: "#f9f9f9",
-        minHeight: "100vh",
-      }}
-    >
-      <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-        <div
-          style={{
-            flex: "1 1 300px",
-            backgroundColor: "#fff",
-            padding: "20px",
-            borderRadius: "10px",
-            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-            textAlign: "center",
-          }}
-        >
-          <img
-            src={
-              profileImage ||
-              "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTOYjBEK4eaJZnQcg651SM1OyzuzWXY9JZrqYM6fL0_BlEiZmSmDQst0lxjdKHDRRRTc2QdZCtF79H01fEb_u5eXQ"
-            } // Show selected image or default
-            alt="Admin"
-            style={{
-              width: "200px",
-              height: "200px",
-              borderRadius: "50%",
-              marginBottom: "10px",
-            }}
-          />
-          <h3>{adminData.fullName}</h3>
-          <p style={{ marginTop: "10px", color: "gray" }}>
-            Last login at: {new Date(adminData.lastLogin).toLocaleString()}
-          </p>
-          <div className="row display-flex">
-            <div className="col-6">
-              <Link to="/login">
-                <CustomButton
-                  variant="contained"
-                  style={{ marginTop: "20px", marginLeft: "100px",width: "50px", height: "50px", minWidth: "50px" }}
-                  icon={LogoutIcon}
-                ></CustomButton>
-              </Link>
-            </div>
-            <div className="col-6">
-  <label
-    htmlFor="image-upload"
-    style={{
-      backgroundColor: "#2563EB",
-      marginTop: "20px",
-      color: "#ffffff",
-      borderRadius: "10px",
-      width: "50px",
-      height: "50px",
-      minWidth: "50px",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      gap: "8px",
-      cursor: "pointer",
-      transition: "all 0.2s ease-in-out",
-    }}
-    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#1E40AF")}
-    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#2563EB")}
-  >
-    <BackupIcon style={{ fontSize: "18px" }} />
-  </label>
-  <input
-    id="image-upload"
-    type="file"
-    accept="image/*"
-    onChange={handleImageChange}
-    style={{ display: "none" }} // Hide the actual file input
-  />
-</div>
-
-          </div>
-
-
             <Divider sx={{ mb: 2 }} />
             <Box sx={{ textAlign: "left" }}>
               <Typography
@@ -313,7 +214,6 @@ function Admin() {
             </Box>
           </StyledPaper>
         </Grid>
-
 
         {/* Right Details Section */}
         <Grid item xs={12} md={8}>
@@ -399,14 +299,6 @@ function Admin() {
         </Grid>
       </Grid>
     </Box>
-
-          <CustomButton variant="contained" icon={SaveIcon}   style={{ marginTop: "20px" }}>
-            Save
-          </CustomButton>
-        </div>
-      </div>
-    </div>
-
   );
 }
 

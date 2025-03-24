@@ -57,17 +57,24 @@ const ProductList = () => {
 
   const fetchFilterOptions = async () => {
     try {
-      const [categoryTypesRes, categoriesRes, subcategoriesRes] = await Promise.all([
-        axios.get(`${BASE_URL}/api/category-type/all`, {
-          headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
-        }),
-        axios.get(`${BASE_URL}/api/category/all`, {
-          headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
-        }),
-        axios.get(`${BASE_URL}/api/subcategory/all`, {
-          headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
-        }),
-      ]);
+      const [categoryTypesRes, categoriesRes, subcategoriesRes] =
+        await Promise.all([
+          axios.get(`${BASE_URL}/api/category-type/all`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }),
+          axios.get(`${BASE_URL}/api/category/all`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }),
+          axios.get(`${BASE_URL}/api/subcategory/all`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }),
+        ]);
 
       setFilterOptions({
         categoryTypes: categoryTypesRes.data?.data || [],
@@ -81,9 +88,10 @@ const ProductList = () => {
 
   // Fixed price range parsing function
   const getPriceRangeValues = (range) => {
-    if (range === "all" || !range) return { minPrice: undefined, maxPrice: undefined };
+    if (range === "all" || !range)
+      return { minPrice: undefined, maxPrice: undefined };
     if (range === "10000+") return { minPrice: "10000", maxPrice: undefined };
-    
+
     const [min, max] = range.split("-");
     return { minPrice: min, maxPrice: max };
   };
@@ -109,6 +117,7 @@ const ProductList = () => {
           search: searchQuery,
           minPrice,
           maxPrice,
+          shop: "zen-chatbot.myshopify.com",
         },
         headers: {
           authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -116,12 +125,16 @@ const ProductList = () => {
       });
 
       // Adjust based on actual API response structure
-      const { data, totalPages: pages, totalItems } = response.data.success 
-        ? { 
-            data: response.data.data, 
-            totalPages: response.data.totalPages || 1, 
-            totalItems: response.data.totalItems || response.data.data.length 
-          } 
+      const {
+        data,
+        totalPages: pages,
+        totalItems,
+      } = response.data.success
+        ? {
+            data: response.data.data,
+            totalPages: response.data.totalPages || 1,
+            totalItems: response.data.totalItems || response.data.data.length,
+          }
         : { data: [], totalPages: 1, totalItems: 0 };
 
       setProducts(data);
@@ -203,7 +216,12 @@ const ProductList = () => {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
         <CircularProgress />
       </Box>
     );
@@ -222,13 +240,23 @@ const ProductList = () => {
 
   return (
     <Box padding={2}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
         <Typography variant="h5">Products Management</Typography>
         <Box display="flex" alignItems="center" gap={1}>
-          <IconButton color="primary" onClick={() => fetchProducts(currentPage)}>
+          <IconButton
+            color="primary"
+            onClick={() => fetchProducts(currentPage)}
+          >
             <Refresh />
           </IconButton>
-          <Typography fontWeight="bold">{new Date().toLocaleString()}</Typography>
+          <Typography fontWeight="bold">
+            {new Date().toLocaleString()}
+          </Typography>
         </Box>
       </Box>
 
@@ -256,9 +284,16 @@ const ProductList = () => {
         </form>
       </Box>
 
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
         <Typography>
-          Showing: <strong>{totalProducts > 0 ? `${startItem}-${endItem}` : "0"}</strong>|{" "}
+          Showing:{" "}
+          <strong>{totalProducts > 0 ? `${startItem}-${endItem}` : "0"}</strong>
+          |{" "}
           <Typography component="span" sx={{ fontWeight: "medium" }}>
             Total Products: <strong>{totalProducts}</strong>
           </Typography>
@@ -268,7 +303,9 @@ const ProductList = () => {
             id="stock-filter"
             name="inStock"
             value={filters.inStock}
-            onChange={(e) => setFilters({ ...filters, inStock: e.target.value })}
+            onChange={(e) =>
+              setFilters({ ...filters, inStock: e.target.value })
+            }
             label="Stock"
             MenuItems={[
               { value: "", label: "All" },
@@ -280,7 +317,9 @@ const ProductList = () => {
             id="product-category-filter"
             name="categoryType"
             value={filters.categoryType}
-            onChange={(e) => setFilters({ ...filters, categoryType: e.target.value })}
+            onChange={(e) =>
+              setFilters({ ...filters, categoryType: e.target.value })
+            }
             label="Category-Type"
             MenuItems={[
               { value: "", label: "All" },
@@ -305,7 +344,9 @@ const ProductList = () => {
             id="status-filter"
             name="isActive"
             value={filters.isActive}
-            onChange={(e) => setFilters({ ...filters, isActive: e.target.value })}
+            onChange={(e) =>
+              setFilters({ ...filters, isActive: e.target.value })
+            }
             label="Status"
             MenuItems={[
               { value: "", label: "All" },
@@ -313,10 +354,18 @@ const ProductList = () => {
               { value: "true", label: "Approved" },
             ]}
           />
-          <CustomButton variant="contained" color="primary" onClick={applyFilters}>
+          <CustomButton
+            variant="contained"
+            color="primary"
+            onClick={applyFilters}
+          >
             APPLY
           </CustomButton>
-          <CustomButton variant="outlined" color="secondary" onClick={clearFilters}>
+          <CustomButton
+            variant="outlined"
+            color="secondary"
+            onClick={clearFilters}
+          >
             CLEAR
           </CustomButton>
         </Box>
@@ -327,14 +376,30 @@ const ProductList = () => {
           <TableHead>
             <TableRow sx={{ backgroundColor: "primary.main" }}>
               <TableCell></TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>PRODUCT NAME</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>STOCK</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>PRICE</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>CATEGORY-TYPE</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>SELLER</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>STATUS</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>LAST MODIFIED</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>ACTIONS</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                PRODUCT NAME
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                STOCK
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                PRICE
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                CATEGORY-TYPE
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                SELLER
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                STATUS
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                LAST MODIFIED
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                ACTIONS
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -344,7 +409,7 @@ const ProductList = () => {
                   <TableCell>
                     <Avatar
                       variant="rounded"
-                      src={product.thumbnail?.url}
+                      src={product.images[0]?.url}
                       alt={product.title}
                       sx={{ width: 60, height: 60 }}
                       onError={(e) => {
@@ -354,22 +419,40 @@ const ProductList = () => {
                     />
                   </TableCell>
                   <TableCell>
-                    {product.title?.length > 20 ? `${product.title.slice(0, 20)}...` : product.title}
+                    {product.title?.length > 20
+                      ? `${product.title.slice(0, 20)}...`
+                      : product.title}
                   </TableCell>
                   <TableCell>
-                    {product.stock > 0 ? `In stock (${product.stock})` : "Out of stock"}
+                    {product.stock > 0
+                      ? `In stock (${product.stock})`
+                      : "Out of stock"}
                   </TableCell>
-                  <TableCell>₹{product.discountedPrice || product.price}</TableCell>
-                  <TableCell>{product?.categoryType?.name || "Unavailable"}</TableCell>
-                  <TableCell>{product?.seller?.companyName || "Unknown"}</TableCell>
+                  <TableCell>
+                    ₹{product.discountedPrice || product.price}
+                  </TableCell>
+                  <TableCell>
+                    {product?.categoryType?.name || "Unavailable"}
+                  </TableCell>
+                  <TableCell>
+                    {product?.vendor?.companyName || "Unknown"}
+                  </TableCell>
                   <TableCell>
                     <Chip
                       label={product.isApproved ? "Approved" : "Pending"}
                       color={product.isApproved ? "success" : "error"}
-                      sx={{ fontWeight: "bold", textTransform: "uppercase", borderWidth: 2 }}
+                      sx={{
+                        fontWeight: "bold",
+                        textTransform: "uppercase",
+                        borderWidth: 2,
+                      }}
                     />
                   </TableCell>
-                  <TableCell>{new Date(product.updatedAt || product.createdAt).toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    {new Date(
+                      product.updatedAt || product.createdAt
+                    ).toLocaleDateString()}
+                  </TableCell>
                   <TableCell>
                     <CustomButton
                       variant="contained"

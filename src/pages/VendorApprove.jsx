@@ -119,13 +119,13 @@ const VendorApprove = () => {
   // Fetch vendor data from API
   useEffect(() => {
     const fetchVendorData = async () => {
-      if (!token) {
-        console.error("No token found in localStorage");
-        return;
-      }
+      // if (!token) {
+      //   console.error("No token found in localStorage");
+      //   return;
+      // }
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/vendor/get-one/${vendorId}`,
+          `${BASE_URL}/api/vendor/get-one/${vendorId}?shop=zen-chatbot.myshopify.com`,
           {
             headers: {
               authorization: `Bearer ${token}`,
@@ -354,7 +354,7 @@ const VendorApprove = () => {
     setLoading(true); // Start loading
     try {
       await axios.put(
-        `${BASE_URL}/api/vendor/approve/${vendorId}`,
+        `${BASE_URL}/api/vendor/approve/${vendorId}?shop=zen-chatbot.myshopify.com`,
         {},
         {
           headers: {
