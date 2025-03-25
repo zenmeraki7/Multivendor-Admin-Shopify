@@ -42,9 +42,9 @@ const ProfileSection = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
   marginBottom: theme.spacing(3),
 }));
-import CustomInput from "../components/SharedComponents/CustomInput"; // Importing CustomInput
-import { logoutUser } from "../utils/authUtils";
-import CustomButton from "../components/SharedComponents/CustomButton";
+// import CustomInput from "../components/SharedComponents/CustomInput"; // Importing CustomInput
+// import { logoutUser } from "../utils/authUtils";
+// import CustomButton from "../components/SharedComponents/CustomButton";
 
 
 function Admin() {
@@ -216,196 +216,200 @@ function Admin() {
               />
             </Box>
 
-    <div
-      style={{
-        padding: "30px",
-        backgroundColor: "#f9f9f9",
-        minHeight: "100vh",
-      }}
-    >
-      <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-        <div
-          style={{
-            flex: "1 1 300px",
-            backgroundColor: "#fff",
-            padding: "20px",
-            borderRadius: "10px",
-            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-            textAlign: "center",
-          }}
-        >
-          <img
-            src={
-              profileImage ||
-              "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTOYjBEK4eaJZnQcg651SM1OyzuzWXY9JZrqYM6fL0_BlEiZmSmDQst0lxjdKHDRRRTc2QdZCtF79H01fEb_u5eXQ"
-            } // Show selected image or default
-            alt="Admin"
-            style={{
-              width: "200px",
-              height: "200px",
-              borderRadius: "50%",
-              marginBottom: "10px",
-            }}
-          />
-          <h3>{adminData.fullName}</h3>
-          <p style={{ marginTop: "10px", color: "gray" }}>
-            Last login at: {new Date(adminData.lastLogin).toLocaleString()}
-          </p>
-          <div className="row display-flex">
-            <div className="col-6">
-              <Link to="/login">
-                <CustomButton
-                  variant="contained"
-                  style={{ marginTop: "20px", marginLeft: "100px",width: "50px", height: "50px", minWidth: "50px" }}
-                  icon={LogoutIcon}
-                ></CustomButton>
-              </Link>
-            </div>
-            <div className="col-6">
-  <label
-    htmlFor="image-upload"
-    style={{
-      backgroundColor: "#2563EB",
-      marginTop: "20px",
-      color: "#ffffff",
-      borderRadius: "10px",
-      width: "50px",
-      height: "50px",
-      minWidth: "50px",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      gap: "8px",
-      cursor: "pointer",
-      transition: "all 0.2s ease-in-out",
-    }}
-    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#1E40AF")}
-    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#2563EB")}
-  >
-    <BackupIcon style={{ fontSize: "18px" }} />
-  </label>
-  <input
-    id="image-upload"
-    type="file"
-    accept="image/*"
-    onChange={handleImageChange}
-    style={{ display: "none" }} // Hide the actual file input
-  />
-</div>
-
-          </div>
-
-
-            <Divider sx={{ mb: 2 }} />
-            <Box sx={{ textAlign: "left" }}>
-              <Typography
-                variant="body1"
-                sx={{ mb: 1, fontSize: "1rem", color: "#4b5563" }}
-              >
-                <strong>Email:</strong> {adminData.email}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ fontSize: "1rem", color: "#4b5563" }}
-              >
-                <strong>Role:</strong> {adminData.role}
-              </Typography>
-            </Box>
-          </StyledPaper>
-        </Grid>
-
-
-        {/* Right Details Section */}
-        <Grid item xs={12} md={8}>
-          <StyledPaper elevation={3}>
-            <Typography
-              variant="h4"
-              sx={{ mb: 4, fontWeight: 600, color: "#1e3a8a" }}
+            <div
+              style={{
+                padding: "30px",
+                backgroundColor: "#f9f9f9",
+                minHeight: "100vh",
+              }}
             >
-              My Profile Details
-            </Typography>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={6}>
-                <CustomInput
-                  id="fullName"
-                  label="Name"
-                  value={adminData.fullName || ""}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <CustomInput
-                  id="email"
-                  label="Email"
-                  type="email"
-                  value={adminData.email || ""}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <CustomInput
-                  id="dob"
-                  label="Date of Birth"
-                  type="date"
-                  value={adminData.dob || ""}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <CustomInput
-                  id="phoneNumber"
-                  label="Phone Number"
-                  value={adminData.phoneNumber || ""}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <CustomInput
-                  id="designation"
-                  label="Designation"
-                  value={adminData.designation || ""}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <CustomInput
-                  id="role"
-                  label="Role"
-                  value={adminData.role || ""}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <CustomInput
-                  id="state"
-                  label="State"
-                  value={adminData.state || ""}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <CustomInput
-                  id="country"
-                  label="Country"
-                  value={adminData.country || ""}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-            </Grid>
-            <StyledButton variant="contained" icon={SaveIcon}>
-              Save Changes
-            </StyledButton>
-          </StyledPaper>
-        </Grid>
-      </Grid>
-    </Box>
+              <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+                <div
+                  style={{
+                    flex: "1 1 300px",
+                    backgroundColor: "#fff",
+                    padding: "20px",
+                    borderRadius: "10px",
+                    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+                    textAlign: "center",
+                  }}
+                >
+                  <img
+                    src={
+                      profileImage ||
+                      "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTOYjBEK4eaJZnQcg651SM1OyzuzWXY9JZrqYM6fL0_BlEiZmSmDQst0lxjdKHDRRRTc2QdZCtF79H01fEb_u5eXQ"
+                    } // Show selected image or default
+                    alt="Admin"
+                    style={{
+                      width: "200px",
+                      height: "200px",
+                      borderRadius: "50%",
+                      marginBottom: "10px",
+                    }}
+                  />
+                  <h3>{adminData.fullName}</h3>
+                  <p style={{ marginTop: "10px", color: "gray" }}>
+                    Last login at: {new Date(adminData.lastLogin).toLocaleString()}
+                  </p>
+                  <div className="row display-flex">
+                    <div className="col-6">
+                      <Link to="/login">
+                        <CustomButton
+                          variant="contained"
+                          style={{ marginTop: "20px", marginLeft: "100px", width: "50px", height: "50px", minWidth: "50px" }}
+                          icon={LogoutIcon}
+                        ></CustomButton>
+                      </Link>
+                    </div>
+                    <div className="col-6">
+                      <label
+                        htmlFor="image-upload"
+                        style={{
+                          backgroundColor: "#2563EB",
+                          marginTop: "20px",
+                          color: "#ffffff",
+                          borderRadius: "10px",
+                          width: "50px",
+                          height: "50px",
+                          minWidth: "50px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: "8px",
+                          cursor: "pointer",
+                          transition: "all 0.2s ease-in-out",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#1E40AF")}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#2563EB")}
+                      >
+                        <BackupIcon style={{ fontSize: "18px" }} />
+                      </label>
+                      <input
+                        id="image-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        style={{ display: "none" }} // Hide the actual file input
+                      />
+                    </div>
 
-          <CustomButton variant="contained" icon={SaveIcon}   style={{ marginTop: "20px" }}>
+                  </div>
+
+
+                  <Divider sx={{ mb: 2 }} />
+                  <Box sx={{ textAlign: "left" }}>
+                    <Typography
+                      variant="body1"
+                      sx={{ mb: 1, fontSize: "1rem", color: "#4b5563" }}
+                    >
+                      <strong>Email:</strong> {adminData.email}
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{ fontSize: "1rem", color: "#4b5563" }}
+                    >
+                      <strong>Role:</strong> {adminData.role}
+                    </Typography>
+                  </Box>
+                </div>
+              </div>
+
+
+
+
+              {/* Right Details Section */}
+              <Grid item xs={12} md={8}>
+                <StyledPaper elevation={3}>
+                  <Typography
+                    variant="h4"
+                    sx={{ mb: 4, fontWeight: 600, color: "#1e3a8a" }}
+                  >
+                    My Profile Details
+                  </Typography>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                      <CustomInput
+                        id="fullName"
+                        label="Name"
+                        value={adminData.fullName || ""}
+                        onChange={handleInputChange}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <CustomInput
+                        id="email"
+                        label="Email"
+                        type="email"
+                        value={adminData.email || ""}
+                        onChange={handleInputChange}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <CustomInput
+                        id="dob"
+                        label="Date of Birth"
+                        type="date"
+                        value={adminData.dob || ""}
+                        onChange={handleInputChange}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <CustomInput
+                        id="phoneNumber"
+                        label="Phone Number"
+                        value={adminData.phoneNumber || ""}
+                        onChange={handleInputChange}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <CustomInput
+                        id="designation"
+                        label="Designation"
+                        value={adminData.designation || ""}
+                        onChange={handleInputChange}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <CustomInput
+                        id="role"
+                        label="Role"
+                        value={adminData.role || ""}
+                        onChange={handleInputChange}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <CustomInput
+                        id="state"
+                        label="State"
+                        value={adminData.state || ""}
+                        onChange={handleInputChange}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <CustomInput
+                        id="country"
+                        label="Country"
+                        value={adminData.country || ""}
+                        onChange={handleInputChange}
+                      />
+                    </Grid>
+                  </Grid>
+                  <StyledButton variant="contained" icon={SaveIcon}>
+                    Save Changes
+                  </StyledButton>
+                </StyledPaper>
+              </Grid>
+            </div>
+          </StyledPaper>
+          
+          
+
+          <CustomButton variant="contained" icon={SaveIcon} style={{ marginTop: "20px" }}>
             Save
           </CustomButton>
-        </div>
-      </div>
-    </div>
+        </Grid >
+      </Grid >
+    </Box >
 
   );
 }
