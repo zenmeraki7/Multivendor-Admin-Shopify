@@ -99,37 +99,47 @@ function VendorDetails() {
   useEffect(() => {
     const fetchVendors = async () => {
       const token = localStorage.getItem("token");
-    
+
       // if (!token) {
       //   setError("Authorization token is missing. Please log in.");
       //   navigate("/login");
       //   return;
       // }
-    
+
       try {
         setLoading(true);
-    
+
         const { minSales, maxSales } = getSalesRangeValues(salesRange);
-    
-        const response = await axios.get(`${BASE_URL}/api/vendor/all`, {
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${token}`,
-          },
-          params: {
-            isVerified: status === "true" ? "true" : status === "false" ? "false" : undefined,
-            isBlocked: status === "blocked" ? "true" : undefined, 
-            state: state !== "all" ? state : undefined,
-            country: country !== "all" ? country : undefined,
-            minSales: minSales,
-            maxSales: maxSales,
-            search: searchText || undefined,
-            page,
-            limit: rowsPerPage,
-            shop:'zen-chatbot.myshopify.com'
-          },
-        });
-    
+
+        const response = await axios.get(
+          `${BASE_URL}/api/vendor/all`,
+          { withCredentials: true },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${token}`,
+            },
+
+            params: {
+              isVerified:
+                status === "true"
+                  ? "true"
+                  : status === "false"
+                  ? "false"
+                  : undefined,
+              isBlocked: status === "blocked" ? "true" : undefined,
+              state: state !== "all" ? state : undefined,
+              country: country !== "all" ? country : undefined,
+              minSales: minSales,
+              maxSales: maxSales,
+              search: searchText || undefined,
+              page,
+              limit: rowsPerPage,
+              shop: "zen-chatbot.myshopify.com",
+            },
+          }
+        );
+
         setVendors(response.data.data || []);
         setTotalPages(response.data.totalPages || 1);
         setTotalItems(response.data.totalItems || 0);
@@ -149,7 +159,6 @@ function VendorDetails() {
         setLoading(false);
       }
     };
-    
 
     fetchVendors();
   }, [
@@ -182,7 +191,6 @@ function VendorDetails() {
       />
     );
   };
-  
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -245,10 +253,14 @@ function VendorDetails() {
                 >
                   ADD
                 </Link> */}
-                <NavLink to="/add-seller"  style={{ textDecoration: "none", color: "inherit" }}>ADD</NavLink>
+                <NavLink
+                  to="/add-seller"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  ADD
+                </NavLink>
               </CustomButton>
             </Box>
-           
           }
         />
 
@@ -309,7 +321,7 @@ function VendorDetails() {
                 { value: "all", label: "All" },
                 { value: "true", label: "Approved" },
                 { value: "false", label: "Pending" },
-                { value: "blocked", label: "Blocked" }, 
+                { value: "blocked", label: "Blocked" },
               ]}
             />
 

@@ -18,6 +18,9 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../utils/baseUrl";
+import toast from "react-hot-toast";
 
 // Import your logo (replace with your actual logo path)
 // import logo from "./logo.png"; // Adjust the path to your logo
@@ -37,10 +40,14 @@ function Header() {
   };
 
   // Handle logout functionality
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // Remove the token from localStorage
-    setOpen(false);
-    navigate("/login"); // Navigate to the login page
+  const handleLogout = async () => {
+    try {
+      await axios.post(`${BASE_URL}/shopify/logout`, {}, { withCredentials: true });
+      window.location.href = "https://partners.shopify.com/organizations"; // Redirect user to login page
+    } catch (error) {
+      toast.error("Logout failed");
+      console.error("Logout failed:", error);
+    }
   };
 
   return (
@@ -64,7 +71,9 @@ function Header() {
             onClick={() => navigate("/")} // Navigate to home on logo click
           >
             <Avatar
-              src={"https://lh3.googleusercontent.com/a/ACg8ocJ-t5Nzx9TP62xZ2hQJJDIXrCdMxMSpIOSTvZbahr4gZFp3U_nw=s360-c-no"}
+              src={
+                "https://lh3.googleusercontent.com/a/ACg8ocJ-t5Nzx9TP62xZ2hQJJDIXrCdMxMSpIOSTvZbahr4gZFp3U_nw=s360-c-no"
+              }
               alt="Zen Store Logo"
               sx={{ width: 40, height: 40, mr: 2, border: "2px solid #fff" }}
             />
