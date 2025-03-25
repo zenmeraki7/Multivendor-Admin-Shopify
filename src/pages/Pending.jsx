@@ -25,7 +25,7 @@ import TableSelect from "../components/SharedComponents/TableSelect";
 import TableInput from "../components/SharedComponents/TableInput";
 import CustomButton from "../components/SharedComponents/CustomButton";
 
-const ProductList = () => {
+const Pending = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -340,20 +340,7 @@ const ProductList = () => {
               label: option.label,
             }))}
           />
-          <TableSelect
-            id="status-filter"
-            name="isActive"
-            value={filters.isActive}
-            onChange={(e) =>
-              setFilters({ ...filters, isActive: e.target.value })
-            }
-            label="Status"
-            MenuItems={[
-              { value: "", label: "All" },
-              { value: "false", label: "Pending" },
-              { value: "true", label: "Approved" },
-            ]}
-          />
+          
           <CustomButton
             variant="contained"
             color="primary"
@@ -368,13 +355,7 @@ const ProductList = () => {
           >
             CLEAR
           </CustomButton>
-          <CustomButton
-            variant="outlined"
-            color="secondary"
-            
-          >
-           <Link to="/pending" style={{textDecoration:"none"}} > PENDING</Link>
-          </CustomButton>
+          
         </Box>
       </Box>
 
@@ -398,9 +379,7 @@ const ProductList = () => {
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>
                 SELLER
               </TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
-                STATUS
-              </TableCell>
+              
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>
                 LAST MODIFIED
               </TableCell>
@@ -444,17 +423,7 @@ const ProductList = () => {
                   <TableCell>
                     {product?.vendor?.companyName || "Unknown"}
                   </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={product.isApproved ? "Approved" : "Pending"}
-                      color={product.isApproved ? "success" : "error"}
-                      sx={{
-                        fontWeight: "bold",
-                        textTransform: "uppercase",
-                        borderWidth: 2,
-                      }}
-                    />
-                  </TableCell>
+                  
                   <TableCell>
                     {new Date(
                       product.updatedAt || product.createdAt
@@ -465,9 +434,9 @@ const ProductList = () => {
                       variant="contained"
                       color="primary"
                       isSmall
-                      onClick={() => navigate(`/view-product/${product._id}`)}
+
                     >
-                      View
+                      APPROVE
                     </CustomButton>
                   </TableCell>
                 </TableRow>
@@ -495,4 +464,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default Pending;
