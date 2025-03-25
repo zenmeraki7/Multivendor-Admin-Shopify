@@ -72,12 +72,13 @@ const ViewProduct = () => {
     try {
       setLoadingBtn(true);
       const response = await axios.put(
-        `${BASE_URL}/api/product/approve/${id}?shop=zen-chatbot.myshopify.com`,
+        `${BASE_URL}/api/product/approve/${id}`,
         {},
         {
           headers: {
             authorization: `Bearer ${localStorage.getItem("token")}`,
           },
+          withCredentials: true,
         }
       );
       fetchProductData();
@@ -270,12 +271,7 @@ const ViewProduct = () => {
               alignItems="center"
               sx={{ mb: 2 }}
             >
-              <Rating
-                value={0}
-                precision={0.5}
-                readOnly
-                size="small"
-              />
+              <Rating value={0} precision={0.5} readOnly size="small" />
               <Typography variant="body2" color="text.secondary">
                 ({0} Reviews)
               </Typography>

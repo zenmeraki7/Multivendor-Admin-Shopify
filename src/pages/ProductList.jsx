@@ -122,6 +122,7 @@ const ProductList = () => {
         headers: {
           authorization: `Bearer ${localStorage.getItem("token")}`,
         },
+        withCredentials: true,
       });
 
       // Adjust based on actual API response structure
