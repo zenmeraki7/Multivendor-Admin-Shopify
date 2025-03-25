@@ -100,11 +100,11 @@ function VendorDetails() {
     const fetchVendors = async () => {
       const token = localStorage.getItem("token");
     
-      if (!token) {
-        setError("Authorization token is missing. Please log in.");
-        navigate("/login");
-        return;
-      }
+      // if (!token) {
+      //   setError("Authorization token is missing. Please log in.");
+      //   navigate("/login");
+      //   return;
+      // }
     
       try {
         setLoading(true);
@@ -126,6 +126,7 @@ function VendorDetails() {
             search: searchText || undefined,
             page,
             limit: rowsPerPage,
+            shop:'zen-chatbot.myshopify.com'
           },
         });
     

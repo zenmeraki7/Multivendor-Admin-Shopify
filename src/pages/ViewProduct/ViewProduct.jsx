@@ -72,7 +72,7 @@ const ViewProduct = () => {
     try {
       setLoadingBtn(true);
       const response = await axios.put(
-        `${BASE_URL}/api/product/approve/${id}`,
+        `${BASE_URL}/api/product/approve/${id}?shop=zen-chatbot.myshopify.com`,
         {},
         {
           headers: {
@@ -271,13 +271,13 @@ const ViewProduct = () => {
               sx={{ mb: 2 }}
             >
               <Rating
-                value={product.rating.average || 0}
+                value={0}
                 precision={0.5}
                 readOnly
                 size="small"
               />
               <Typography variant="body2" color="text.secondary">
-                ({product.rating.count} Reviews)
+                ({0} Reviews)
               </Typography>
             </Stack>
 
@@ -393,9 +393,9 @@ const ViewProduct = () => {
               >
                 <CardMedia
                   component="img"
-                  alt={product.thumbnail?.altText || product.title}
+                  alt={product.title}
                   height="400"
-                  image={product.thumbnail?.url}
+                  image={product.images[0]?.url}
                   sx={{
                     objectFit: "contain",
                     backgroundColor: "#f5f5f5",
@@ -478,7 +478,7 @@ const ViewProduct = () => {
                 <Box sx={{ flexGrow: 1 }} />
 
                 {/* Return policy section */}
-                <Box sx={{ mt: 3, p: 2, bgcolor: "#f8f9fa", borderRadius: 1 }}>
+                {/* <Box sx={{ mt: 3, p: 2, bgcolor: "#f8f9fa", borderRadius: 1 }}>
                   <Typography variant="subtitle2" gutterBottom>
                     Return Policy
                   </Typography>
@@ -487,7 +487,7 @@ const ViewProduct = () => {
                       ? `Returnable within ${product.returnPolicy.returnWindow} days`
                       : "Not returnable"}
                   </Typography>
-                </Box>
+                </Box> */}
               </Paper>
             </Grid>
 

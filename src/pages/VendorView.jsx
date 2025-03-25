@@ -35,10 +35,10 @@ const VendorView = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    if (!token) {
-      navigate("/login");
-      return;
-    }
+    // if (!token) {
+    //   navigate("/login");
+    //   return;
+    // }
 
     const fetchVendorDetails = async () => {
       setLoading(true);
@@ -46,7 +46,7 @@ const VendorView = () => {
 
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/vendor/get-one/${vendorId}`,
+          `${BASE_URL}/api/vendor/get-one/${vendorId}?shop=zen-chatbot.myshopify.com`,
           {
             headers: {
               authorization: `Bearer ${token}`,
