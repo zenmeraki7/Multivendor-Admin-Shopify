@@ -46,7 +46,8 @@ const VendorView = () => {
 
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/vendor/get-one/${vendorId}?shop=zen-chatbot.myshopify.com`,
+          `${BASE_URL}/api/vendor/get-one/${vendorId}`,
+          { withCredentials: true },
           {
             headers: {
               authorization: `Bearer ${token}`,

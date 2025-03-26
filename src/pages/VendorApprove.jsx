@@ -125,7 +125,8 @@ const VendorApprove = () => {
       // }
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/vendor/get-one/${vendorId}?shop=zen-chatbot.myshopify.com`,
+          `${BASE_URL}/api/vendor/get-one/${vendorId}`,
+          { withCredentials: true },
           {
             headers: {
               authorization: `Bearer ${token}`,
@@ -354,8 +355,9 @@ const VendorApprove = () => {
     setLoading(true); // Start loading
     try {
       await axios.put(
-        `${BASE_URL}/api/vendor/approve/${vendorId}?shop=zen-chatbot.myshopify.com`,
+        `${BASE_URL}/api/vendor/approve/${vendorId}`,
         {},
+        { withCredentials: true },
         {
           headers: {
             authorization: `Bearer ${token}`,
@@ -386,6 +388,7 @@ const VendorApprove = () => {
       await axios.put(
         `${BASE_URL}/api/vendor/reject/${vendorId}`,
         { verificationRemarks: rejectReason },
+        { withCredentials: true },
         {
           headers: {
             authorization: `Bearer ${token}`,
