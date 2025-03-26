@@ -109,20 +109,24 @@ const Pending = () => {
         }
       });
 
-      const response = await axios.get(`${BASE_URL}/api/product/allproduct`, {
-        params: {
-          page,
-          limit: itemsPerPage,
-          ...cleanFilters,
-          search: searchQuery,
-          minPrice,
-          maxPrice,
-          shop: "zen-chatbot.myshopify.com",
-        },
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/api/product/allproduct`,
+        { withCredentials: true },
+        {
+          params: {
+            page,
+            limit: itemsPerPage,
+            ...cleanFilters,
+            search: searchQuery,
+            minPrice,
+            maxPrice,
+            shop: "zen-chatbot.myshopify.com",
+          },
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
       // Adjust based on actual API response structure
       const {
@@ -340,7 +344,7 @@ const Pending = () => {
               label: option.label,
             }))}
           />
-          
+
           <CustomButton
             variant="contained"
             color="primary"
@@ -355,7 +359,6 @@ const Pending = () => {
           >
             CLEAR
           </CustomButton>
-          
         </Box>
       </Box>
 
@@ -379,7 +382,7 @@ const Pending = () => {
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>
                 SELLER
               </TableCell>
-              
+
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>
                 LAST MODIFIED
               </TableCell>
@@ -423,19 +426,14 @@ const Pending = () => {
                   <TableCell>
                     {product?.vendor?.companyName || "Unknown"}
                   </TableCell>
-                  
+
                   <TableCell>
                     {new Date(
                       product.updatedAt || product.createdAt
                     ).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
-                    <CustomButton
-                      variant="contained"
-                      color="primary"
-                      isSmall
-
-                    >
+                    <CustomButton variant="contained" color="primary" isSmall>
                       APPROVE
                     </CustomButton>
                   </TableCell>
