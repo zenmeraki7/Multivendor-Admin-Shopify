@@ -109,22 +109,25 @@ const ProductList = () => {
         }
       });
 
-      const response = await axios.get(`${BASE_URL}/api/product/allproduct`, {
-        params: {
-          page,
-          limit: itemsPerPage,
-          ...cleanFilters,
-          search: searchQuery,
-          minPrice,
-          maxPrice,
-          shop: "zen-chatbot.myshopify.com",
-        },
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        withCredentials: true,
-      });
-
+      const response = await axios.get(
+        `${BASE_URL}/api/product/all-approved-products`,
+        {
+          params: {
+            page,
+            limit: itemsPerPage,
+            ...cleanFilters,
+            search: searchQuery,
+            minPrice,
+            maxPrice,
+            shop: "zen-chatbot.myshopify.com",
+          },
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(response.data);
       // Adjust based on actual API response structure
       const {
         data,
@@ -369,12 +372,11 @@ const ProductList = () => {
           >
             CLEAR
           </CustomButton>
-          <CustomButton
-            variant="outlined"
-            color="secondary"
-            
-          >
-           <Link to="/pending" style={{textDecoration:"none"}} > PENDING</Link>
+          <CustomButton variant="outlined" color="secondary">
+            <Link to="/pending" style={{ textDecoration: "none" }}>
+              {" "}
+              PENDING
+            </Link>
           </CustomButton>
         </Box>
       </Box>
