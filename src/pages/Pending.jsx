@@ -433,7 +433,7 @@ const Pending = () => {
                     ).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
-                    <CustomButton variant="contained" color="primary" isSmall>
+                    <CustomButton variant="contained" color="primary" isSmall onClick={() => navigate(`/view-product/${product._id}`)}>
                       APPROVE
                     </CustomButton>
                   </TableCell>

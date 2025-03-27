@@ -21,14 +21,18 @@ import {
   Skeleton,
   Breadcrumbs,
   Link as MuiLink,
-} from "@mui/material";
-import {
+  Avatar,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+
+import BusinessIcon from '@mui/icons-material/Business';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import LaunchIcon from '@mui/icons-material/Launch';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import StarIcon from "@mui/icons-material/Star";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -248,7 +252,7 @@ const ViewProduct = () => {
                 color={product.isApproved ? "success" : "warning"}
                 variant={product.isApproved ? "filled" : "outlined"}
               />
-              <Chip
+              {/* <Chip
                 size="small"
                 label={
                   product.inStock
@@ -257,15 +261,15 @@ const ViewProduct = () => {
                 }
                 color={product.inStock ? "primary" : "error"}
                 variant="outlined"
-              />
-              <Chip
+              /> */}
+              {/* <Chip
                 size="small"
                 label={product.isActive ? "Active" : "Inactive"}
                 color={product.isActive ? "success" : "default"}
                 variant="outlined"
-              />
+              /> */}
             </Stack>
-            <Stack
+            {/* <Stack
               direction="row"
               spacing={1}
               alignItems="center"
@@ -275,7 +279,7 @@ const ViewProduct = () => {
               <Typography variant="body2" color="text.secondary">
                 ({0} Reviews)
               </Typography>
-            </Stack>
+            </Stack> */}
 
             <Typography variant="h6" color="primary" gutterBottom>
               ₹{product.discountedPrice || product.price}
@@ -421,15 +425,15 @@ const ViewProduct = () => {
                 <Divider sx={{ my: 2 }} />
 
                 <Grid container spacing={2}>
-                  <Grid item xs={6}>
+                  {/* <Grid item xs={6}>
                     <Typography variant="body2" color="text.secondary">
                       Brand
                     </Typography>
                     <Typography variant="body1">
                       {product.brand || "Not specified"}
                     </Typography>
-                  </Grid>
-                  <Grid item xs={6}>
+                  </Grid> */}
+                  {/* <Grid item xs={6}>
                     <Typography variant="body2" color="text.secondary">
                       Category
                     </Typography>
@@ -444,7 +448,7 @@ const ViewProduct = () => {
                     <Typography variant="body1">
                       {product.subcategory?.name || "Not specified"}
                     </Typography>
-                  </Grid>
+                  </Grid> */}
                   <Grid item xs={6}>
                     <Typography variant="body2" color="text.secondary">
                       Type
@@ -461,14 +465,14 @@ const ViewProduct = () => {
                       {product.stock} units
                     </Typography>
                   </Grid>
-                  <Grid item xs={6}>
+                  {/* <Grid item xs={6}>
                     <Typography variant="body2" color="text.secondary">
                       Sold
                     </Typography>
                     <Typography variant="body1">
                       {product.productSold} units
                     </Typography>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
 
                 <Box sx={{ flexGrow: 1 }} />
@@ -488,7 +492,7 @@ const ViewProduct = () => {
             </Grid>
 
             {/* Special offers section */}
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <Paper elevation={0} variant="outlined" sx={{ p: 3 }}>
                 <Typography variant="h6" gutterBottom>
                   Special Offers
@@ -536,7 +540,7 @@ const ViewProduct = () => {
                   </Typography>
                 )}
               </Paper>
-            </Grid>
+            </Grid> */}
 
             {/* SEO metadata */}
             <Grid item xs={12}>
@@ -582,8 +586,8 @@ const ViewProduct = () => {
               Technical Specifications
             </Typography>
             {product.specifications &&
-            product.specifications.length > 0 &&
-            product.specifications[0].key ? (
+              product.specifications.length > 0 &&
+              product.specifications[0].key ? (
               <Grid container spacing={2}>
                 {product.specifications.map((spec, index) => (
                   <Grid item xs={12} sm={6} md={4} key={index}>
@@ -744,77 +748,187 @@ const ViewProduct = () => {
 
       {/* Seller Info Tab */}
       <Box role="tabpanel" hidden={tabValue !== 4}>
-        {tabValue === 4 && (
-          <Paper elevation={0} variant="outlined" sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Seller Information
-            </Typography>
-            {product.seller ? (
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <Paper elevation={0} sx={{ p: 2, bgcolor: "#f8f9fa" }}>
-                    <Typography variant="subtitle1" gutterBottom>
-                      Company Details
+  {tabValue === 4 && (
+    <Paper 
+      elevation={0} 
+      variant="outlined" 
+      sx={{ 
+        p: 3, 
+        borderRadius: 2,
+        background: 'linear-gradient(to right bottom, #ffffff, #f8f9fa)'
+      }}
+    >
+      <Typography 
+        variant="h6" 
+        gutterBottom
+        sx={{ 
+          fontWeight: 600, 
+          color: 'primary.main',
+          mb: 3,
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+          pb: 1
+        }}
+      >
+        Seller Information
+      </Typography>
+      
+      {product.vendor ? (
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={6}>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                p: 3, 
+                height: '100%',
+                bgcolor: 'background.paper',
+                borderRadius: 2,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                transition: 'transform 0.3s',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                }
+              }}
+            >
+              <Box display="flex" alignItems="center" mb={2}>
+                <Avatar sx={{ bgcolor: 'primary.light', mr: 2 }}>
+                  <BusinessIcon />
+                </Avatar>
+                <Typography variant="subtitle1" fontWeight={600}>
+                  Company Details
+                </Typography>
+              </Box>
+              
+              <Divider sx={{ mb: 2 }} />
+              
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      Company Name
                     </Typography>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} sm={6}>
-                        <Typography variant="body2" color="text.secondary">
-                          Company Name
-                        </Typography>
-                        <Typography variant="body1">
-                          {product.seller.companyName || "Not provided"}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <Typography variant="body2" color="text.secondary">
-                          Email
-                        </Typography>
-                        <Typography variant="body1">
-                          {product.seller.email || "Not provided"}
-                        </Typography>
-                      </Grid>
-                      {/* Add more seller fields as needed */}
-                    </Grid>
-                  </Paper>
+                    <Typography variant="body1" fontWeight={500}>
+                      {product.vendor.companyName || "Not provided"}
+                    </Typography>
+                  </Box>
                 </Grid>
-                <Grid item xs={12} md={6}>
-                  <Paper elevation={0} sx={{ p: 2, bgcolor: "#f8f9fa" }}>
-                    <Typography variant="subtitle1" gutterBottom>
-                      Product Statistics
+                
+                <Grid item xs={12}>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      Email
                     </Typography>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} sm={6}>
-                        <Typography variant="body2" color="text.secondary">
-                          Total Products
-                        </Typography>
-                        <Typography variant="body1">
-                          {product.seller.totalProducts || "N/A"}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <Typography variant="body2" color="text.secondary">
-                          Joined On
-                        </Typography>
-                        <Typography variant="body1">
-                          {product.seller.createdAt
-                            ? new Date(
-                                product.seller.createdAt
-                              ).toLocaleDateString()
-                            : "N/A"}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Paper>
+                    <Typography 
+                      variant="body1" 
+                      component="a" 
+                      href={`mailto:${product.vendor.email}`}
+                      sx={{ 
+                        color: 'primary.main',
+                        textDecoration: 'none',
+                        '&:hover': {
+                          textDecoration: 'underline'
+                        }
+                      }}
+                    >
+                      {product.vendor.email || "Not provided"}
+                    </Typography>
+                  </Box>
                 </Grid>
               </Grid>
-            ) : (
-              <Alert severity="warning">
-                Seller information is not available for this product.
-              </Alert>
-            )}
-          </Paper>
-        )}
-      </Box>
+            </Paper>
+          </Grid>
+          
+          <Grid item xs={12} md={6}>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                p: 3, 
+                height: '100%',
+                bgcolor: 'background.paper',
+                borderRadius: 2,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                transition: 'transform 0.3s',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                }
+              }}
+            >
+              <Box display="flex" alignItems="center" mb={2}>
+                <Avatar sx={{ bgcolor: 'secondary.light', mr: 2 }}>
+                  <StorefrontIcon />
+                </Avatar>
+                <Typography variant="subtitle1" fontWeight={600}>
+                  Store Information
+                </Typography>
+              </Box>
+              
+              <Divider sx={{ mb: 2 }} />
+              
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      Merchant Shop
+                    </Typography>
+                    <Typography 
+                      variant="body1" 
+                      component="a" 
+                      href={`https://${product.merchantShop}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{
+                        color: 'primary.main',
+                        textDecoration: 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        '&:hover': {
+                          textDecoration: 'underline'
+                        }
+                      }}
+                    >
+                      {product.merchantShop || "N/A"}
+                      <LaunchIcon sx={{ ml: 0.5, fontSize: 16 }} />
+                    </Typography>
+                  </Box>
+                </Grid>
+                
+                <Grid item xs={12}>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      Products Sold
+                    </Typography>
+                    <Box display="flex" alignItems="center">
+                      <LocalShippingIcon sx={{ mr: 1, color: 'success.main' }} />
+                      <Typography variant="body1" fontWeight={500}>
+                        {product.productSold || 0}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
+        </Grid>
+      ) : (
+        <Alert 
+          severity="warning"
+          variant="outlined"
+          sx={{ 
+            borderRadius: 2,
+            '& .MuiAlert-icon': {
+              color: 'warning.main'
+            }
+          }}
+        >
+          <AlertTitle>No Seller Data</AlertTitle>
+          Seller information is not available for this product.
+        </Alert>
+      )}
+    </Paper>
+  )}
+</Box>
 
       {/* Approval/rejection dialog */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
