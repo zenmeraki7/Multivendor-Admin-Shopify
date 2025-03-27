@@ -37,6 +37,7 @@ const ProductList = () => {
   const [totalProducts, setTotalProducts] = useState(0);
   const navigate = useNavigate();
   const [priceRange, setPriceRange] = useState("all");
+  const [isShopifyFormat, setIsShopifyFormat] = useState(false);
 
   const [filters, setFilters] = useState({
     inStock: "",
@@ -97,6 +98,7 @@ const ProductList = () => {
   };
 
   const fetchProducts = async (page = 1) => {
+    console.log("Fetching approved products...");
     setLoading(true);
     setError(null);
     try {
@@ -127,24 +129,39 @@ const ProductList = () => {
           withCredentials: true,
         }
       );
-      console.log(response.data);
-      // Adjust based on actual API response structure
-      const {
-        data,
-        totalPages: pages,
-        totalItems,
-      } = response.data.success
-        ? {
-            data: response.data.data,
-            totalPages: response.data.totalPages || 1,
-            totalItems: response.data.totalItems || response.data.data.length,
-          }
-        : { data: [], totalPages: 1, totalItems: 0 };
 
-      setProducts(data);
-      setFilteredProducts(data);
-      setTotalPages(pages);
-      setTotalProducts(totalItems);
+      console.log("API Response:", response.data);
+
+      // Detect if the data is in Shopify format or your API format
+      let productsData = [];
+      let totalItemsCount = 0;
+      let totalPagesCount = 1;
+
+      // Check if the data is in Shopify format (has edges and nodes)
+      if (response.data?.data?.products?.edges) {
+        // Shopify GraphQL format
+        setIsShopifyFormat(true);
+        // Filter only ACTIVE products from Shopify format
+        productsData = response.data.data.products.edges.filter(
+          item => item.node.status === "ACTIVE"
+        );
+        totalItemsCount = productsData.length;
+        totalPagesCount = Math.ceil(totalItemsCount / itemsPerPage);
+      } else {
+        // Standard API format
+        setIsShopifyFormat(false);
+        // Filter only approved products from API format
+        productsData = (response.data.data || []).filter(
+          item => item.isActive === true || item.status === "ACTIVE"
+        );
+        totalItemsCount = productsData.length;
+        totalPagesCount = Math.ceil(totalItemsCount / itemsPerPage);
+      }
+
+      setProducts(productsData);
+      setFilteredProducts(productsData);
+      setTotalPages(totalPagesCount);
+      setTotalProducts(totalItemsCount);
       setLoading(false);
     } catch (err) {
       console.error("Fetch products error:", err);
@@ -166,12 +183,23 @@ const ProductList = () => {
       setFilteredProducts(products);
     } else {
       const lowercasedTerm = searchTerm.toLowerCase();
-      const filtered = products.filter((product) =>
-        product.title?.toLowerCase().includes(lowercasedTerm)
-      );
+
+      // Handle different data structures and only show approved products
+      const filtered = products.filter((product) => {
+        // First get the title for searching
+        const title = isShopifyFormat
+          ? product.node?.title
+          : product.title;
+
+        // Check if title matches search term
+        const titleMatches = title?.toLowerCase().includes(lowercasedTerm);
+
+        return titleMatches;
+      });
+
       setFilteredProducts(filtered);
     }
-  }, [searchTerm, products]);
+  }, [searchTerm, products, isShopifyFormat]);
 
   const handleSearchSubmit = (e) => {
     if (e) e.preventDefault();
@@ -242,6 +270,38 @@ const ProductList = () => {
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalProducts);
 
+  // Helper function to extract product data regardless of format
+  const getProductData = (product, field) => {
+    if (isShopifyFormat) {
+      const node = product.node;
+      switch (field) {
+        case 'id': return node?.id;
+        case 'title': return node?.title;
+        case 'imageUrl': return node?.featuredMedia?.preview?.image?.url;
+        case 'totalInventory': return node?.totalInventory;
+        case 'price': return node?.variants?.edges?.[0]?.node?.price;
+        case 'productType': return node?.productType;
+        case 'vendor': return node?.vendor;
+        case 'status': return node?.status;
+        case 'createdAt': return node?.createdAt;
+        default: return null;
+      }
+    } else {
+      switch (field) {
+        case 'id': return product.id;
+        case 'title': return product.title;
+        case 'imageUrl': return product.image;
+        case 'totalInventory': return product.totalInventory;
+        case 'price': return product.price;
+        case 'productType': return product.productType || product.categoryType;
+        case 'vendor': return product.vendor;
+        case 'status': return product.isActive ? "ACTIVE" : "INACTIVE";
+        case 'createdAt': return product.createdAt;
+        default: return null;
+      }
+    }
+  };
+
   return (
     <Box padding={2}>
       <Box
@@ -250,7 +310,7 @@ const ProductList = () => {
         alignItems="center"
         mb={2}
       >
-        <Typography variant="h5">Products Management</Typography>
+        <Typography variant="h5">Approved Products</Typography>
         <Box display="flex" alignItems="center" gap={1}>
           <IconButton
             color="primary"
@@ -378,6 +438,12 @@ const ProductList = () => {
               PENDING
             </Link>
           </CustomButton>
+          <CustomButton
+            variant="contained"
+            color="primary"
+          >
+            EXPORT
+          </CustomButton>
         </Box>
       </Box>
 
@@ -386,95 +452,99 @@ const ProductList = () => {
           <TableHead>
             <TableRow sx={{ backgroundColor: "primary.main" }}>
               <TableCell></TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
-                PRODUCT NAME
-              </TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
-                STOCK
-              </TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
-                PRICE
-              </TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
-                CATEGORY-TYPE
-              </TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
-                SELLER
-              </TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
-                STATUS
-              </TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
-                LAST MODIFIED
-              </TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
-                ACTIONS
-              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>PRODUCT NAME</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>STOCK</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>PRICE</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>TYPE</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>VENDOR</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>STATUS</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>CREATED AT</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>ACTIONS</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {filteredProducts.length > 0 ? (
-              filteredProducts.map((product, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <Avatar
-                      variant="rounded"
-                      src={product.images[0]?.url}
-                      alt={product.title}
-                      sx={{ width: 60, height: 60 }}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "/fallback-image.png";
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    {product.title?.length > 20
-                      ? `${product.title.slice(0, 20)}...`
-                      : product.title}
-                  </TableCell>
-                  <TableCell>
-                    {product.stock > 0
-                      ? `In stock (${product.stock})`
-                      : "Out of stock"}
-                  </TableCell>
-                  <TableCell>
-                    ₹{product.discountedPrice || product.price}
-                  </TableCell>
-                  <TableCell>
-                    {product?.categoryType?.name || "Unavailable"}
-                  </TableCell>
-                  <TableCell>
-                    {product?.vendor?.companyName || "Unknown"}
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={product.isApproved ? "Approved" : "Pending"}
-                      color={product.isApproved ? "success" : "error"}
-                      sx={{
-                        fontWeight: "bold",
-                        textTransform: "uppercase",
-                        borderWidth: 2,
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    {new Date(
-                      product.updatedAt || product.createdAt
-                    ).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>
-                    <CustomButton
-                      variant="contained"
-                      color="primary"
-                      isSmall
-                      onClick={() => navigate(`/view-product/${product._id}`)}
-                    >
-                      View
-                    </CustomButton>
-                  </TableCell>
-                </TableRow>
-              ))
+              filteredProducts.map((product, index) => {
+                // Double-check that we're only displaying approved products
+                const status = getProductData(product, 'status');
+                if (status !== "ACTIVE") {
+                  return null; // Skip non-approved products
+                }
+
+                return (
+                  <TableRow key={getProductData(product, 'id') || index}>
+                    {/* Product Image */}
+                    <TableCell>
+                      <Avatar
+                        variant="rounded"
+                        src={getProductData(product, 'imageUrl') || '/placeholder-image.jpg'}
+                        alt={getProductData(product, 'title')}
+                        sx={{ width: 60, height: 60 }}
+                      />
+                    </TableCell>
+
+                    {/* Product Name */}
+                    <TableCell>
+                      {(() => {
+                        const title = getProductData(product, 'title');
+                        return title && title.length > 20
+                          ? `${title.slice(0, 20)}...`
+                          : title || "Untitled";
+                      })()}
+                    </TableCell>
+
+                    {/* Stock */}
+                    <TableCell>
+                      {(() => {
+                        const inventory = getProductData(product, 'totalInventory');
+                        return inventory > 0
+                          ? `In stock (${inventory})`
+                          : "Out of stock";
+                      })()}
+                    </TableCell>
+
+                    {/* Price */}
+                    <TableCell>
+                      ₹{getProductData(product, 'price') || "N/A"}
+                    </TableCell>
+
+                    {/* Category Type */}
+                    <TableCell>{getProductData(product, 'productType') || "Unavailable"}</TableCell>
+
+                    {/* Vendor */}
+                    <TableCell>{getProductData(product, 'vendor') || "Unknown"}</TableCell>
+
+                    {/* Status */}
+                    <TableCell>
+                      <Chip
+                        label={getProductData(product, 'status') === "ACTIVE" ? "ACTIVE" : "Pending"}
+                        color={getProductData(product, 'status') === "ACTIVE" ? "success" : "error"}
+                        sx={{ fontWeight: "bold", textTransform: "uppercase", borderWidth: 2 }}
+                      />
+                    </TableCell>
+
+                    {/* Created At */}
+                    <TableCell>
+                      {(() => {
+                        const date = getProductData(product, 'createdAt');
+                        return date ? new Date(date).toLocaleDateString() : "N/A";
+                      })()}
+                    </TableCell>
+
+                    {/* Actions */}
+                    <TableCell>
+                      <CustomButton
+                        variant="contained"
+                        color="primary"
+                        isSmall
+                        onClick={() => navigate(`/view-product/${getProductData(product, 'id')}`)}
+                      >
+                        View
+                      </CustomButton>
+                    </TableCell>
+                  </TableRow>
+                );
+              }).filter(item => item !== null)
             ) : (
               <TableRow>
                 <TableCell colSpan={9} style={{ textAlign: "center" }}>
