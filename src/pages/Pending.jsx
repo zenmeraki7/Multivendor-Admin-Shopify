@@ -110,7 +110,7 @@ const Pending = () => {
       });
 
       const response = await axios.get(
-        `${BASE_URL}/api/product/allproduct`,
+        `${BASE_URL}/api/product/all-pending-products`,
         { withCredentials: true },
         {
           params: {

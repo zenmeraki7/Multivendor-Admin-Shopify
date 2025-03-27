@@ -112,7 +112,7 @@ const ProductList = () => {
       });
 
       const response = await axios.get(
-        `${BASE_URL}/api/product/all-approved-products`,
+        `${BASE_URL}/api/product/all-pending-products`,
         {
           params: {
             page,
@@ -121,7 +121,6 @@ const ProductList = () => {
             search: searchQuery,
             minPrice,
             maxPrice,
-            shop: "zen-chatbot.myshopify.com",
           },
           headers: {
             authorization: `Bearer ${localStorage.getItem("token")}`,
