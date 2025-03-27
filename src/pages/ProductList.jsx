@@ -112,7 +112,7 @@ const ProductList = () => {
       });
 
       const response = await axios.get(
-        `${BASE_URL}/api/product/all-pending-products`,
+        `${BASE_URL}/api/product/all-approved-products`,
         {
           params: {
             page,
