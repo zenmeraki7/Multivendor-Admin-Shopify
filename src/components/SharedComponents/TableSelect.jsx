@@ -10,9 +10,10 @@ function TableSelect({ id, name, value, onChange, label, MenuItems = [] }) {
   return (
     <FormControl
       variant="outlined"
+      size="small"
       sx={{
-        width: "120px", // Reduced width
-        height: "50px", // Reduced height
+        minWidth: "100px", // Reduced width
+        // height: "50px", // Reduced height
         marginBottom: "5px",
         borderRadius: "8px",
         "& .MuiOutlinedInput-root": {
@@ -36,7 +37,7 @@ function TableSelect({ id, name, value, onChange, label, MenuItems = [] }) {
         value={value || ""}
         onChange={handleChange}
         label={label}
-        sx={{ width: "100px", height: "100px" }} // Ensuring dropdown is also adjusted
+        // sx={{ width: "100px", height: "100px" }} // Ensuring dropdown is also adjusted
       >
         {MenuItems.map((item, index) => (
           <MenuItem key={index} value={item.value}>

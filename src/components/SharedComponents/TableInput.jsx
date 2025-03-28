@@ -13,6 +13,7 @@ function TableInput({
 }) {
   return (
     <TextField
+    size="small"
       id={id}
       name={name}
       label={label}
@@ -24,7 +25,7 @@ function TableInput({
       type={type}
       sx={{
         width: "220px", // Reduced width
-        height: "50px",
+        // height: "50px",
         marginBottom: "5px",
         borderRadius: "8px",
         "& .MuiOutlinedInput-root": {

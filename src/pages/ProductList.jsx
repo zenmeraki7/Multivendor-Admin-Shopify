@@ -142,7 +142,7 @@ const ProductList = () => {
         setIsShopifyFormat(true);
         // Filter only ACTIVE products from Shopify format
         productsData = response.data.data.products.edges.filter(
-          item => item.node.status === "ACTIVE"
+          (item) => item.node.status === "ACTIVE"
         );
         totalItemsCount = productsData.length;
         totalPagesCount = Math.ceil(totalItemsCount / itemsPerPage);
@@ -151,7 +151,7 @@ const ProductList = () => {
         setIsShopifyFormat(false);
         // Filter only approved products from API format
         productsData = (response.data.data || []).filter(
-          item => item.isActive === true || item.status === "ACTIVE"
+          (item) => item.isActive === true || item.status === "ACTIVE"
         );
         totalItemsCount = productsData.length;
         totalPagesCount = Math.ceil(totalItemsCount / itemsPerPage);
@@ -186,9 +186,7 @@ const ProductList = () => {
       // Handle different data structures and only show approved products
       const filtered = products.filter((product) => {
         // First get the title for searching
-        const title = isShopifyFormat
-          ? product.node?.title
-          : product.title;
+        const title = isShopifyFormat ? product.node?.title : product.title;
 
         // Check if title matches search term
         const titleMatches = title?.toLowerCase().includes(lowercasedTerm);
@@ -274,29 +272,49 @@ const ProductList = () => {
     if (isShopifyFormat) {
       const node = product.node;
       switch (field) {
-        case 'id': return node?.id;
-        case 'title': return node?.title;
-        case 'imageUrl': return node?.featuredMedia?.preview?.image?.url;
-        case 'totalInventory': return node?.totalInventory;
-        case 'price': return node?.variants?.edges?.[0]?.node?.price;
-        case 'productType': return node?.productType;
-        case 'vendor': return node?.vendor;
-        case 'status': return node?.status;
-        case 'createdAt': return node?.createdAt;
-        default: return null;
+        case "id":
+          return node?.id;
+        case "title":
+          return node?.title;
+        case "imageUrl":
+          return node?.featuredMedia?.preview?.image?.url;
+        case "totalInventory":
+          return node?.totalInventory;
+        case "price":
+          return node?.variants?.edges?.[0]?.node?.price;
+        case "productType":
+          return node?.productType;
+        case "vendor":
+          return node?.metafield?.value || node.vendor;
+        case "status":
+          return node?.status;
+        case "createdAt":
+          return node?.createdAt;
+        default:
+          return null;
       }
     } else {
       switch (field) {
-        case 'id': return product.id;
-        case 'title': return product.title;
-        case 'imageUrl': return product.image;
-        case 'totalInventory': return product.totalInventory;
-        case 'price': return product.price;
-        case 'productType': return product.productType || product.categoryType;
-        case 'vendor': return product.vendor;
-        case 'status': return product.isActive ? "ACTIVE" : "INACTIVE";
-        case 'createdAt': return product.createdAt;
-        default: return null;
+        case "id":
+          return product.id;
+        case "title":
+          return product.title;
+        case "imageUrl":
+          return product.image;
+        case "totalInventory":
+          return product.totalInventory;
+        case "price":
+          return product.price;
+        case "productType":
+          return product.productType || product.categoryType;
+        case "vendor":
+          return product.vendor;
+        case "status":
+          return product.isActive ? "ACTIVE" : "INACTIVE";
+        case "createdAt":
+          return product.createdAt;
+        default:
+          return null;
       }
     }
   };
@@ -437,10 +455,7 @@ const ProductList = () => {
               PENDING
             </Link>
           </CustomButton>
-          <CustomButton
-            variant="contained"
-            color="primary"
-          >
+          <CustomButton variant="contained" color="primary">
             EXPORT
           </CustomButton>
         </Box>
@@ -451,99 +466,146 @@ const ProductList = () => {
           <TableHead>
             <TableRow sx={{ backgroundColor: "primary.main" }}>
               <TableCell></TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>PRODUCT NAME</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>STOCK</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>PRICE</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>TYPE</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>VENDOR</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>STATUS</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>CREATED AT</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>ACTIONS</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                PRODUCT NAME
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                STOCK
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                PRICE
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                TYPE
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                VENDOR
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                STATUS
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                CREATED AT
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                ACTIONS
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {filteredProducts.length > 0 ? (
-              filteredProducts.map((product, index) => {
-                // Double-check that we're only displaying approved products
-                const status = getProductData(product, 'status');
-                if (status !== "ACTIVE") {
-                  return null; // Skip non-approved products
-                }
+              filteredProducts
+                .map((product, index) => {
+                  // Double-check that we're only displaying approved products
+                  const status = getProductData(product, "status");
+                  if (status !== "ACTIVE") {
+                    return null; // Skip non-approved products
+                  }
 
-                return (
-                  <TableRow key={getProductData(product, 'id') || index}>
-                    {/* Product Image */}
-                    <TableCell>
-                      <Avatar
-                        variant="rounded"
-                        src={getProductData(product, 'imageUrl') || '/placeholder-image.jpg'}
-                        alt={getProductData(product, 'title')}
-                        sx={{ width: 60, height: 60 }}
-                      />
-                    </TableCell>
+                  return (
+                    <TableRow key={getProductData(product, "id") || index}>
+                      {/* Product Image */}
+                      <TableCell>
+                        <Avatar
+                          variant="rounded"
+                          src={
+                            getProductData(product, "imageUrl") ||
+                            "/placeholder-image.jpg"
+                          }
+                          alt={getProductData(product, "title")}
+                          sx={{ width: 60, height: 60 }}
+                        />
+                      </TableCell>
 
-                    {/* Product Name */}
-                    <TableCell>
-                      {(() => {
-                        const title = getProductData(product, 'title');
-                        return title && title.length > 20
-                          ? `${title.slice(0, 20)}...`
-                          : title || "Untitled";
-                      })()}
-                    </TableCell>
+                      {/* Product Name */}
+                      <TableCell>
+                        {(() => {
+                          const title = getProductData(product, "title");
+                          return title && title.length > 20
+                            ? `${title.slice(0, 20)}...`
+                            : title || "Untitled";
+                        })()}
+                      </TableCell>
 
-                    {/* Stock */}
-                    <TableCell>
-                      {(() => {
-                        const inventory = getProductData(product, 'totalInventory');
-                        return inventory > 0
-                          ? `In stock (${inventory})`
-                          : "Out of stock";
-                      })()}
-                    </TableCell>
+                      {/* Stock */}
+                      <TableCell>
+                        {(() => {
+                          const inventory = getProductData(
+                            product,
+                            "totalInventory"
+                          );
+                          return inventory > 0
+                            ? `In stock (${inventory})`
+                            : "Out of stock";
+                        })()}
+                      </TableCell>
 
-                    {/* Price */}
-                    <TableCell>
-                      ₹{getProductData(product, 'price') || "N/A"}
-                    </TableCell>
+                      {/* Price */}
+                      <TableCell>
+                        ₹{getProductData(product, "price") || "N/A"}
+                      </TableCell>
 
-                    {/* Category Type */}
-                    <TableCell>{getProductData(product, 'productType') || "Unavailable"}</TableCell>
+                      {/* Category Type */}
+                      <TableCell>
+                        {getProductData(product, "productType") ||
+                          "Unavailable"}
+                      </TableCell>
 
-                    {/* Vendor */}
-                    <TableCell>{getProductData(product, 'vendor') || "Unknown"}</TableCell>
+                      {/* Vendor */}
+                      <TableCell>
+                        {getProductData(product, "vendor") || "Unknown"}
+                      </TableCell>
 
-                    {/* Status */}
-                    <TableCell>
-                      <Chip
-                        label={getProductData(product, 'status') === "ACTIVE" ? "ACTIVE" : "Pending"}
-                        color={getProductData(product, 'status') === "ACTIVE" ? "success" : "error"}
-                        sx={{ fontWeight: "bold", textTransform: "uppercase", borderWidth: 2 }}
-                      />
-                    </TableCell>
+                      {/* Status */}
+                      <TableCell>
+                        <Chip
+                          label={
+                            getProductData(product, "status") === "ACTIVE"
+                              ? "ACTIVE"
+                              : "Pending"
+                          }
+                          color={
+                            getProductData(product, "status") === "ACTIVE"
+                              ? "success"
+                              : "error"
+                          }
+                          sx={{
+                            fontWeight: "bold",
+                            textTransform: "uppercase",
+                            borderWidth: 2,
+                          }}
+                        />
+                      </TableCell>
 
-                    {/* Created At */}
-                    <TableCell>
-                      {(() => {
-                        const date = getProductData(product, 'createdAt');
-                        return date ? new Date(date).toLocaleDateString() : "N/A";
-                      })()}
-                    </TableCell>
+                      {/* Created At */}
+                      <TableCell>
+                        {(() => {
+                          const date = getProductData(product, "createdAt");
+                          return date
+                            ? new Date(date).toLocaleDateString()
+                            : "N/A";
+                        })()}
+                      </TableCell>
 
-                    {/* Actions */}
-                    <TableCell>
-                      <CustomButton
-                        variant="contained"
-                        color="primary"
-                        isSmall
-                        onClick={() => navigate(`/view-product/${getProductData(product, 'id')}`)}
-                      >
-                        View
-                      </CustomButton>
-                    </TableCell>
-                  </TableRow>
-                );
-              }).filter(item => item !== null)
+                      {/* Actions */}
+                      <TableCell>
+                        <CustomButton
+                          variant="contained"
+                          color="primary"
+                          isSmall
+                          onClick={() =>
+                            navigate(
+                              `/view-product/${getProductData(product, "id")}`
+                            )
+                          }
+                        >
+                          View
+                        </CustomButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+                .filter((item) => item !== null)
             ) : (
               <TableRow>
                 <TableCell colSpan={9} style={{ textAlign: "center" }}>
