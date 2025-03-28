@@ -273,7 +273,7 @@ const ProductList = () => {
       const node = product.node;
       switch (field) {
         case "id":
-          return node?.id;
+          return node?.id?.split("/")?.pop(); // Extract the ID from the Shopify format
         case "title":
           return node?.title;
         case "imageUrl":
