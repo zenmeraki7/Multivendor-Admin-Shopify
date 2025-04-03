@@ -172,7 +172,7 @@ const ViewProduct = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${BASE_URL}/api/product/get-one/${id}`,
+        `${BASE_URL}/api/product/get-one-pending-product/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
