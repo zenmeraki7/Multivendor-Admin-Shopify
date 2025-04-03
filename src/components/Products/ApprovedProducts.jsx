@@ -609,7 +609,7 @@ const ApprovedProducts = () => {
                                                     isSmall
                                                     onClick={() =>
                                                         navigate(
-                                                            `/view-product/${getProductData(product, "id")}`
+                                                            `/view-approved-product/${product.node.id?.split("/")?.pop()}`
                                                         )
                                                     }
                                                 >

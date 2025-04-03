@@ -1,4 +1,4 @@
-export const logoutUser = () => {
+export const logoutUser = (navigate) => {
   localStorage.removeItem("token");
   navigate("/login"); 
 };
