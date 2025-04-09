@@ -61,7 +61,6 @@ function OrderDetails() {
 
       console.log("API Response:", response.data);
       
-      // Access the data array directly since it's not in edges format
       const ordersData = response.data?.data || [];
       console.log("Orders data found:", ordersData.length);
       
@@ -75,7 +74,7 @@ function OrderDetails() {
         items: node.lineItems.edges,
         itemsCount: node.lineItems.edges.length,
         deliveryMethod: node.shippingLine?.title || "Standard Shipping",
-        node: node, // Preserve the original node for accessing id in the view action
+        node: node, 
       }));
 
       console.log("Formatted orders:", formattedOrders);
@@ -94,7 +93,6 @@ function OrderDetails() {
 
     setOrderedCount(orders.length);
 
-    // Count orders based on their status
     setConfirmedCount(orders.filter(o => o.paymentStatus === "Paid" && o.status === "Unfulfilled").length);
     setCanceledCount(orders.filter(o => o.paymentStatus === "Unpaid").length);
     setCompletedCount(orders.filter(o => o.paymentStatus === "Paid" && o.status === "FulFilled").length);

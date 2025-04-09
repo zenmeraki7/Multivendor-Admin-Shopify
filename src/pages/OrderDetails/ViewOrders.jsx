@@ -97,7 +97,6 @@ function ViewOrders() {
   const total = order.totalPriceSet?.presentmentMoney?.amount || '0.00';
   const currencyCode = order.totalPriceSet?.presentmentMoney?.currencyCode || 'INR';
 
-  // Format currency for display
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
