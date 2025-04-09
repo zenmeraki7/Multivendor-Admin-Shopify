@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Search, Download, Refresh, Visibility } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom"; // Added import for navigate
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -27,7 +27,7 @@ import CustomButton from "../../components/SharedComponents/CustomButton";
 import { BASE_URL } from "../../utils/baseUrl";
 
 function OrderDetails() {
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,7 +36,6 @@ function OrderDetails() {
   const [filters, setFilters] = useState({
     orderStatus: "",
     paymentStatus: "",
-    deliveryStatus: "",
   });
   const itemsPerPage = 4;
 
@@ -60,23 +59,26 @@ function OrderDetails() {
         withCredentials: true,
       });
 
-      const edges = response.data?.data?.edges || [];
-
-      const formattedOrders = edges.map(({ node }) => ({
+      console.log("API Response:", response.data);
+      
+      // Access the data array directly since it's not in edges format
+      const ordersData = response.data?.data || [];
+      console.log("Orders data found:", ordersData.length);
+      
+      const formattedOrders = ordersData.map(({ node }) => ({
         orderId: node.name,
         date: new Date(node.createdAt).toLocaleDateString(),
         customerName: node.customer ? `${node.customer.firstName} ${node.customer.lastName}` : "Guest Customer",
-        channel: "Shopify",
         total: `${node.totalPriceSet.presentmentMoney.amount} ${node.totalPriceSet.presentmentMoney.currencyCode}`,
         paymentStatus: node.fullyPaid ? "Paid" : "Unpaid",
-        status: node.requiresShipping ? "Fulfilled" : "UnFulfilled",
+        status: node.requiresShipping ? "Fulfilled" : "Unfulfilled",
         items: node.lineItems.edges,
         itemsCount: node.lineItems.edges.length,
-        deliveryStatus: node.shippingLine ? "Delivered" : "Pending",
-        deliveryMethod: node.shippingLine?.title || "Shipping",
+        deliveryMethod: node.shippingLine?.title || "Standard Shipping",
         node: node, // Preserve the original node for accessing id in the view action
       }));
 
+      console.log("Formatted orders:", formattedOrders);
       setOrders(formattedOrders);
       setFilteredOrders(formattedOrders);
       calculateSummaryCounts(formattedOrders);
@@ -92,9 +94,10 @@ function OrderDetails() {
 
     setOrderedCount(orders.length);
 
-    setConfirmedCount(orders.filter(o => o.paymentStatus === "Completed" && o.status === "Not Shipped").length);
-    setCanceledCount(orders.filter(o => o.paymentStatus === "Pending" && o.deliveryStatus === "Pending").length);
-    setCompletedCount(orders.filter(o => o.paymentStatus === "Completed" && o.status === "Shipped").length);
+    // Count orders based on their status
+    setConfirmedCount(orders.filter(o => o.paymentStatus === "Paid" && o.status === "Unfulfilled").length);
+    setCanceledCount(orders.filter(o => o.paymentStatus === "Unpaid").length);
+    setCompletedCount(orders.filter(o => o.paymentStatus === "Paid" && o.status === "FulFilled").length);
   };
 
   const applyFiltersAndSearch = () => {
@@ -119,10 +122,6 @@ function OrderDetails() {
       result = result.filter(order => order.paymentStatus === filters.paymentStatus);
     }
 
-    if (filters.deliveryStatus) {
-      result = result.filter(order => order.deliveryStatus === filters.deliveryStatus);
-    }
-
     setFilteredOrders(result);
     setCurrentPage(1); 
   };
@@ -139,7 +138,6 @@ function OrderDetails() {
     setFilters({
       orderStatus: "",
       paymentStatus: "",
-      deliveryStatus: "",
     });
     setSearchTerm("");
   };
@@ -154,11 +152,6 @@ function OrderDetails() {
 
   const exportToCSV = () => {
     console.log("Exporting to CSV...");
-  };
-
-  const handleViewOrder = (orderId) => {
-    console.log("Viewing order details:", orderId);
-    navigate(`/view-order-details/${orderId}`);
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -223,8 +216,8 @@ function OrderDetails() {
                 onChange={(e) => handleFilterChange("orderStatus", e.target.value)}
                 MenuItems={[
                   { value: "", label: "All" },
-                  { value: "Shipped", label: "Shipped" },
-                  { value: "Not Shipped", label: "Not Shipped" }
+                  { value: "Fulfilled", label: "Fulfilled" },
+                  { value: "Unfulfilled", label: "Unfulfilled" }
                 ]}
               />
               <TableSelect
@@ -234,19 +227,8 @@ function OrderDetails() {
                 onChange={(e) => handleFilterChange("paymentStatus", e.target.value)}
                 MenuItems={[
                   { value: "", label: "All" },
-                  { value: "Completed", label: "Paid" },
-                  { value: "Pending", label: "Unpaid" }
-                ]}
-              />
-              <TableSelect
-                id="shipment-filter"
-                label="Shipped"
-                value={filters.deliveryStatus}
-                onChange={(e) => handleFilterChange("deliveryStatus", e.target.value)}
-                MenuItems={[
-                  { value: "", label: "All" },
-                  { value: "Delivered", label: "Fullfilled" },
-                  { value: "Pending", label: "Unfullfilled" }
+                  { value: "Paid", label: "Paid" },
+                  { value: "Unpaid", label: "Unpaid" }
                 ]}
               />
               <CustomButton
@@ -288,7 +270,7 @@ function OrderDetails() {
             <Table>
               <TableHead>
                 <TableRow sx={{ backgroundColor: "primary.main" }}>
-                  {["Order", "Date", "Customer", "Channel", "Total", "Payment status", "Fulfillment status", "Items", "Delivery status", "Delivery method", "Actions"].map((header) => (
+                  {["Order", "Date", "Customer", "Total", "Payment status", "Fulfillment status", "Items", "Delivery method", "Actions"].map((header) => (
                     <TableCell key={header} sx={{ color: "white", fontWeight: "bold" }}>{header}</TableCell>
                   ))}
                 </TableRow>
@@ -310,7 +292,6 @@ function OrderDetails() {
                       </TableCell>
                       <TableCell>{order.date}</TableCell>
                       <TableCell>{order.customerName}</TableCell>
-                      <TableCell>{order.channel}</TableCell>
                       <TableCell>{order.total}</TableCell>
                       <TableCell>
                         <Chip
@@ -327,20 +308,12 @@ function OrderDetails() {
                         />
                       </TableCell>
                       <TableCell>{order.itemsCount}</TableCell>
-                      <TableCell>
-                        <Chip
-                          label={order.deliveryStatus}
-                          color={order.deliveryStatus === "Delivered" ? "success" : "warning"}
-                          size="small"
-                        />
-                      </TableCell>
                       <TableCell>{order.deliveryMethod}</TableCell>
                       <TableCell>
                         <Tooltip title="View Order Details">
                           <CustomButton
                             variant="contained" 
                             onClick={() => {
-                              // Make sure order.node.id exists and extract the ID
                               if (order.node && order.node.id) {
                                 const orderId = order.node.id.split("/").pop();
                                 navigate(`/view-order-details/${orderId}`);

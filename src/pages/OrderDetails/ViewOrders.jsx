@@ -89,11 +89,9 @@ function ViewOrders() {
     );
   }
 
-  // Calculate unfulfilled items count
   const unfulfilledItems = order.lineItems?.edges?.filter(({ node }) => !node.fulfilled) || [];
   const unfulfilledCount = unfulfilledItems.length;
 
-  // Calculate order subtotal, taxes, and total
   const subtotal = order.subtotalPriceSet?.presentmentMoney?.amount || '0.00';
   const taxes = order.totalTaxSet?.presentmentMoney?.amount || '0.00';
   const total = order.totalPriceSet?.presentmentMoney?.amount || '0.00';
@@ -364,9 +362,9 @@ function ViewOrders() {
                     <>
                       <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
                         {order.shippingAddress.name}<br />
-                        {order.shippingAddress.company && `${order.shippingAddress.company}<br />`}
+                        {order.shippingAddress.company && `${order.shippingAddress.company}`}<br />
                         {order.shippingAddress.address1}<br />
-                        {order.shippingAddress.address2 && `${order.shippingAddress.address2}<br />`}
+                        {order.shippingAddress.address2 && `${order.shippingAddress.address2}`}<br />
                         {order.shippingAddress.city}<br />
                         {`${order.shippingAddress.zip} ${order.shippingAddress.city} ${order.shippingAddress.province}`}<br />
                         {order.shippingAddress.country}
@@ -393,9 +391,9 @@ function ViewOrders() {
                       <>
                         <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
                           {order.billingAddress.name}<br />
-                          {order.billingAddress.company && `${order.billingAddress.company}<br />`}
+                          {order.billingAddress.company && `${order.billingAddress.company}`}<br />
                           {order.billingAddress.address1}<br />
-                          {order.billingAddress.address2 && `${order.billingAddress.address2}<br />`}
+                          {order.billingAddress.address2 && `${order.billingAddress.address2}`}<br />
                           {order.billingAddress.city}<br />
                           {`${order.billingAddress.zip} ${order.billingAddress.city} ${order.billingAddress.province}`}<br />
                           {order.billingAddress.country}
