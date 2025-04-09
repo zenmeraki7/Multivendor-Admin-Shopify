@@ -11,7 +11,7 @@ import ProductList from "./pages/ProductList";
 import { Toaster } from "react-hot-toast";
 import Admin from "./pages/Admin";
 import VendorDetails from "./pages/VendorDetails";
-import OrderDetails from "./pages/OrderDetails";
+import OrderDetails from "./pages/OrderDetails/OrderDetails";
 import UserManagement from "./pages/UserManagement";
 import Review from "./pages/Review";
 import VendorApprove from "./pages/VendorApprove";
@@ -48,6 +48,7 @@ import SellerAnalytics from "./pages/SellerAnalytics/SellerAnalytics";
 import Privacy from "./pages/Privacy";
 import Pending from "./pages/Pending";
 import ViewApproved from "./components/Products/ViewApproved";
+import ViewOrders from "./pages/OrderDetails/ViewOrders";
 
 function App() {
   return (
@@ -123,6 +124,9 @@ function App() {
 
           <Route path="privacy-settings" element={<Privacy/>}/>
           <Route path="pending" element={<Pending/>}/>
+
+          <Route path="view-order-details/:id" element={<ViewOrders />} />
+
         </Route>
 
 
